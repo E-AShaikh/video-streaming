@@ -1,7 +1,10 @@
 version: "3"
 services:
   sql-service:
-    build: sql-database
+    build:
+      context: sql-database
+      dockerfile: Dockerfile
+    image: eabushaikh/sql-service:latest
     restart: always
     container_name: sql-service
     ports:
@@ -21,19 +24,28 @@ services:
     volumes:
       - ./volumes/sql-service:/var/lib/mysqlf
   auth-service:
-    build: authentication
+    build:
+      context: authentication
+      dockerfile: Dockerfile
+    image: eabushaikh/auth-service:latest
     container_name: auth-service
     ports:
       - "8070:8070"
   video-storage-service:
-    build: video-storage
+    build:
+      context: video-storage
+      dockerfile: Dockerfile
+    image: eabushaikh/video-storage-service:latest
     container_name: video-storage-service
     ports:
       - "8060:8060"
     volumes:
       - ./volumes/file-storage:/tmp
   upload-service:
-    build: upload-service
+    build:
+      context: upload-service
+      dockerfile: Dockerfile
+    image: eabushaikh/upload-service:latest
     container_name: upload-service
     ports:
       - "8040:8040"
@@ -42,7 +54,10 @@ services:
       - auth-service
       - video-storage-service
   stream-service:
-    build: streaming-service
+    build:
+      context: streaming-service
+      dockerfile: Dockerfile
+    image: eabushaikh/stream-service:latest
     container_name: stream-service
     ports:
       - "8050:8050"
@@ -50,4 +65,3 @@ services:
       - sql-service
       - auth-service
       - video-storage-service
-
