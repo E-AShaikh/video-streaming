@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Streaming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #1c1c1c;
+            color: #fff;
+        }
+
+        .heading {
+            background: #333;
+            color: #fff;
+            font-size: 40px;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            align-items: flex-start;
+            padding: 10px;
+            background-color: #1c1c1c;
+        }
+
+        .main-video,
+        .video-list {
+            background: #292929;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .main-video video {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .main-video .title {
+            font-size: 24px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .video-list {
+            max-height: 520px;
+            overflow-y: auto;
+        }
+
+        .video-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .video-list::-webkit-scrollbar-track {
+            background: #292929;
+        }
+
+        .video-list::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 5px;
+        }
+
+        .video-list .vid {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .video-list .vid:hover {
+            background: #333;
+        }
+
+        .video-list .vid.active {
+            background: #cc0000;
+        }
+
+        .video-list .vid .subtitle {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .video-details .description {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .video-details .publisher {
+            font-size: 18px;
+        }
+
+        @media (max-width: 1080px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<header class="heading">
+    <h1>Video Streaming</h1>
+</header>
+
+<div class="container">
+    <section class="main-video">
+        <div class="video-preview">
+            <video width="999" height="562" th:src="'data:video/mp4;base64,' + ${base64EncodedVideo}" controls autoplay></video>
+        </div>
+        <div class="video-details">
+            <h2 class="title" th:text="${selected.getVidName()}">The Moons of Mars</h2>
+            <p class="description" th:text="${selected.getVidDescription()}">The Moons of Mars</p>
+            <p class="publisher" th:text="${selected.getPublisher()}">admin</p>
+        </div>
+    </section>
+
+    <section class="video-list">
+        <ul>
+            <li th:each="video : ${videos}">
+                <a th:href="@{/play/{vidName}(vidName=${video.getId()})}"
+                   th:class="${video.getId() == selected.getId() ? 'vid active' : 'vid'}">
+                    <div class="video-info">
+                        <h3 class="subtitle" th:text="${video.getVidName()}"></h3>
+                        <p class="description" th:text="${video.getVidDescription()}"></p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </section>
+</div>
+</body>
+</html>

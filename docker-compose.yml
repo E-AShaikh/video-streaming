@@ -1,0 +1,53 @@
+version: "3"
+services:
+  sql-service:
+    build: sql-database
+    restart: always
+    container_name: sql-service
+    ports:
+      - "8090:8090"
+    depends_on:
+      - mysqldb
+  mysqldb:
+    platform: linux/x86_64
+    image: "mysql:5.7"
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: myDB
+      MYSQL_USER: Manifold
+      MYSQL_PASSWORD: Manifold123&
+      MYSQL_ROOT_PASSWORD: Manifold123&
+    volumes:
+      - ./volumes/sql-service:/var/lib/mysqlf
+  auth-service:
+    build: authentication
+    container_name: auth-service
+    ports:
+      - "8070:8070"
+  video-storage-service:
+    build: video-storage
+    container_name: video-storage-service
+    ports:
+      - "8060:8060"
+    volumes:
+      - ./volumes/file-storage:/tmp
+  upload-service:
+    build: upload-service
+    container_name: upload-service
+    ports:
+      - "8040:8040"
+    depends_on:
+      - sql-service
+      - auth-service
+      - video-storage-service
+  stream-service:
+    build: streaming-service
+    container_name: stream-service
+    ports:
+      - "8050:8050"
+    depends_on:
+      - sql-service
+      - auth-service
+      - video-storage-service
+
