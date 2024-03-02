@@ -10,6 +10,6 @@ public class AccountController {
 
     @PostMapping("/")
     public Boolean authenticate(@RequestBody Account account) {
-        return account.getUserName().equals("e.abushaikh123") && account.getPassword().equals("Manifold123123");
+        return account.getUserName().equals("e.abushaikh") && account.getPassword().equals("Manifold123");
     }
 }
